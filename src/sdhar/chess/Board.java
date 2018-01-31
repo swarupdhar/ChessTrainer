@@ -3,14 +3,14 @@ package sdhar.chess;
 import java.util.*;
 
 public class Board {
-    private static final boolean[] A_FILE = setFile(0); // A File
-    private static final boolean[] B_FILE = setFile(1); // B File
-    private static final boolean[] C_FILE = setFile(2); // C File
-    private static final boolean[] D_FILE = setFile(3); // D File
-    private static final boolean[] E_FILE = setFile(4); // E File
-    private static final boolean[] F_FILE = setFile(5); // F File
-    private static final boolean[] G_FILE = setFile(6); // G File
-    private static final boolean[] H_FILE = setFile(7); // H File
+    private static final boolean[] A_FILE = setFile(0);
+    private static final boolean[] B_FILE = setFile(1);
+    private static final boolean[] C_FILE = setFile(2);
+    private static final boolean[] D_FILE = setFile(3);
+    private static final boolean[] E_FILE = setFile(4);
+    private static final boolean[] F_FILE = setFile(5);
+    private static final boolean[] G_FILE = setFile(6);
+    private static final boolean[] H_FILE = setFile(7);
     private static final boolean[] FIRST_RANK = setRank(0); // A8 - H8
     private static final boolean[] SECOND_RANK = setRank(8); // A7 - H7
     private static final boolean[] THIRD_RANK = setRank(16);
@@ -176,7 +176,7 @@ public class Board {
         return Optional.of(promotionSquareIndex);
     }
 
-    List<Piece> getSquares() { return copySquares(squares); }
+    List<Piece> getSquares() { return new ArrayList<>(squares); }
 
     /* Tasks:
         + make the move
@@ -195,7 +195,7 @@ public class Board {
         final List<Integer> legalMoves = MoveGenerator.legalMoves(this, startingIndex);
         if (!legalMoves.contains(endingIndex)) return Optional.empty();
 
-        final List<Piece> newSquares = copySquares(squares);
+        final List<Piece> newSquares = new ArrayList<>(squares);
 
         newSquares.set(endingIndex, pieceMoving);
         newSquares.set(startingIndex, Piece.NONE);
@@ -267,7 +267,7 @@ public class Board {
         );
     }
 
-    public boolean equals(final Board other) {
+    boolean equals(final Board other) {
         for (int i = 0; i < 64; i++) {
             final Piece myPiece = squares.get(i);
             final Piece otherBoardPiece = other.squares.get(i);
@@ -310,10 +310,6 @@ public class Board {
         }
 
         return currentRight;
-    }
-
-    private static List<Piece> copySquares(final List<Piece> squares) {
-        return new ArrayList<>(squares);
     }
 
 }
