@@ -5,11 +5,11 @@ import javafx.scene.layout.Pane;
 public class AnalysisPane extends Pane {
 
     private final AnalysisBoard analysisBoard;
-    private final AnalysisMenu menu;
+    private final Menu menu;
 
     public AnalysisPane(final double width, final double height) {
         analysisBoard = new AnalysisBoard(400);
-        menu = new AnalysisMenu();
+        menu = new Menu();
 
         setWidth(width);
         setHeight(height);
@@ -26,7 +26,6 @@ public class AnalysisPane extends Pane {
         });
 
         menu.prefHeightProperty().bind(heightProperty());
-        menu.setTranslateX(0);
         getChildren().addAll(analysisBoard, menu);
     }
 

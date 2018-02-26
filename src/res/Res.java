@@ -8,8 +8,7 @@ import java.util.Optional;
 public class Res {
     private Res(){}
 
-    public static class Images {
-        // Pieces
+    public static class PieceImages {
         static final Image BLACK_BISHOP = new Image(Res.class.getClassLoader().getResourceAsStream("res/wikiPieces/black_bishop.png"));
         static final Image WHITE_BISHOP = new Image(Res.class.getClassLoader().getResourceAsStream("res/wikiPieces/white_bishop.png"));
 
@@ -31,19 +30,19 @@ public class Res {
 
     public static Optional<Image> getImageForPiece(final Piece piece) {
         switch (piece) {
-            case WHITE_ROOK: return Optional.of(Images.WHITE_ROOK);
-            case WHITE_BISHOP: return Optional.of(Images.WHITE_BISHOP);
-            case WHITE_KNIGHT: return Optional.of(Images.WHITE_KNIGHT);
-            case WHITE_QUEEN: return Optional.of(Images.WHITE_QUEEN);
-            case WHITE_KING: return Optional.of(Images.WHITE_KING);
-            case WHITE_PAWN: return Optional.of(Images.WHITE_PAWN);
+            case WHITE_ROOK: return Optional.of(PieceImages.WHITE_ROOK);
+            case WHITE_BISHOP: return Optional.of(PieceImages.WHITE_BISHOP);
+            case WHITE_KNIGHT: return Optional.of(PieceImages.WHITE_KNIGHT);
+            case WHITE_QUEEN: return Optional.of(PieceImages.WHITE_QUEEN);
+            case WHITE_KING: return Optional.of(PieceImages.WHITE_KING);
+            case WHITE_PAWN: return Optional.of(PieceImages.WHITE_PAWN);
 
-            case BLACK_ROOK: return Optional.of(Images.BLACK_ROOK);
-            case BLACK_BISHOP: return Optional.of(Images.BLACK_BISHOP);
-            case BLACK_KNIGHT: return Optional.of(Images.BLACK_KNIGHT);
-            case BLACK_QUEEN: return Optional.of(Images.BLACK_QUEEN);
-            case BLACK_KING: return Optional.of(Images.BLACK_KING);
-            case BLACK_PAWN: return Optional.of(Images.BLACK_PAWN);
+            case BLACK_ROOK: return Optional.of(PieceImages.BLACK_ROOK);
+            case BLACK_BISHOP: return Optional.of(PieceImages.BLACK_BISHOP);
+            case BLACK_KNIGHT: return Optional.of(PieceImages.BLACK_KNIGHT);
+            case BLACK_QUEEN: return Optional.of(PieceImages.BLACK_QUEEN);
+            case BLACK_KING: return Optional.of(PieceImages.BLACK_KING);
+            case BLACK_PAWN: return Optional.of(PieceImages.BLACK_PAWN);
 
             case NONE:
             default: return Optional.empty();

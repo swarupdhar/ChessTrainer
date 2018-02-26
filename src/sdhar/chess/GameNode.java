@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class GameNode {
+class GameNode {
 
     private final Board board;
     private float moveNumber;
@@ -25,7 +25,6 @@ public class GameNode {
     boolean hasBoard() { return board != null; }
 
     float getMoveNumber() { return moveNumber; }
-    boolean hasMoveNumber() { return moveNumber > 0; }
 
     GameNode getParentNode() { return parentNode; }
     boolean hasParentNode() { return parentNode != null; }

@@ -15,7 +15,7 @@ public enum Piece {
     WHITE_BISHOP(PieceType.BISHOP, 'B', Side.WHITE, Arrays.asList(-7, -9, 7, 9)),
     WHITE_PAWN(PieceType.PAWN, 'P', Side.WHITE, Arrays.asList(-9, -8, -7, -16)),
 
-    BLACK_KING(PieceType.KING, 'K', Side.BLACK, Arrays.asList(-9, -8, -7, -1, 1, 7, 8, 9)),
+    BLACK_KING(PieceType.KING, 'k', Side.BLACK, Arrays.asList(-9, -8, -7, -1, 1, 7, 8, 9)),
     BLACK_QUEEN(PieceType.QUEEN, 'q', Side.BLACK, Arrays.asList(-9, -8, -7, -1, 1, 7, 8, 9)),
     BLACK_ROOK(PieceType.ROOK, 'r', Side.BLACK, Arrays.asList(-8, -1, 1, 8)),
     BLACK_KNIGHT(PieceType.KNIGHT, 'n', Side.BLACK, Arrays.asList(-17, -15, -10, -6, 6, 10, 15, 17)),
