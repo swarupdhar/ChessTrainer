@@ -44,11 +44,10 @@ class MoveGenerator {
     }
 
     static List<Integer> legalMoves(final Board board, final int index) {
-        final List<Integer> moves = new ArrayList<>();
         final List<Integer> result = new ArrayList<>();
-        moves.addAll(allMoves(board, index));
+        final List<Integer> moves = new ArrayList<>(allMoves(board, index));
 
-        final List<Piece> squares = board.getSquares();
+        final List<Piece> squares = board.getCopyOfSquares();
         final Piece piece = squares.get(index);
 
         for (final int move: moves) {
@@ -240,21 +239,26 @@ class MoveGenerator {
                 }
 
                 candidateIndex += dir;
-                if (Board.isValidIndex(candidateIndex)) {
-                    final Piece candidatePiece = board.getPiece(candidateIndex);
-                    if (isEmptyPiece(candidatePiece)) {
-                        moves.add(candidateIndex);
-                    } else {
-                        if (areOpponents(bishop, candidatePiece)) moves.add(candidateIndex);
-                        break;
-                    }
-                } else {
-                    break;
-                }
+                if (shouldAddSlidingMove(board, bishop, moves, candidateIndex)) break;
             }
         }
 
         return moves;
+    }
+
+    private static boolean shouldAddSlidingMove(Board board, Piece bishop, List<Integer> moves, int candidateIndex) {
+        if (Board.isValidIndex(candidateIndex)) {
+            final Piece candidatePiece = board.getPiece(candidateIndex);
+            if (isEmptyPiece(candidatePiece)) {
+                moves.add(candidateIndex);
+            } else {
+                if (areOpponents(bishop, candidatePiece)) moves.add(candidateIndex);
+                return true;
+            }
+        } else {
+            return true;
+        }
+        return false;
     }
 
     private static List<Integer> generateRookMoves (
@@ -273,17 +277,7 @@ class MoveGenerator {
             candidateIndex = index;
             while (Board.isValidIndex(candidateIndex)) {
                 candidateIndex += dir;
-                if (Board.isValidIndex(candidateIndex)) {
-                    final Piece candidatePiece = board.getPiece(candidateIndex);
-                    if (isEmptyPiece(candidatePiece)) {
-                        moves.add(candidateIndex);
-                    } else {
-                        if (areOpponents(rook, candidatePiece)) moves.add(candidateIndex);
-                        break;
-                    }
-                } else {
-                    break;
-                }
+                if (shouldAddSlidingMove(board, rook, moves, candidateIndex)) break;
             }
         }
 
@@ -306,17 +300,7 @@ class MoveGenerator {
                 }
 
                 candidateIndex += dir;
-                if (Board.isValidIndex(candidateIndex)) {
-                    final Piece candidatePiece = board.getPiece(candidateIndex);
-                    if (isEmptyPiece(candidatePiece)) {
-                        moves.add(candidateIndex);
-                    } else {
-                        if (areOpponents(queen, candidatePiece)) moves.add(candidateIndex);
-                        break;
-                    }
-                } else {
-                    break;
-                }
+                if (shouldAddSlidingMove(board, queen, moves, candidateIndex)) break;
             }
         }
 
@@ -336,19 +320,23 @@ class MoveGenerator {
             }
 
             final int candidateIndex = index + dir;
-            if (Board.isValidIndex(candidateIndex)) {
-                final Piece candidatePiece = board.getPiece(candidateIndex);
-                if (isEmptyPiece(candidatePiece)) {
-                    moves.add(candidateIndex);
-                } else {
-                    if (areOpponents(knight, candidatePiece)) {
-                        moves.add(candidateIndex);
-                    }
-                }
-            }
+            shouldAddKMove(board, knight, moves, candidateIndex);
         }
 
         return moves;
+    }
+
+    private static void shouldAddKMove(Board board, Piece knight, List<Integer> moves, int candidateIndex) {
+        if (Board.isValidIndex(candidateIndex)) {
+            final Piece candidatePiece = board.getPiece(candidateIndex);
+            if (isEmptyPiece(candidatePiece)) {
+                moves.add(candidateIndex);
+            } else {
+                if (areOpponents(knight, candidatePiece)) {
+                    moves.add(candidateIndex);
+                }
+            }
+        }
     }
 
     private static List<Integer> generateKingMoves (
@@ -364,16 +352,7 @@ class MoveGenerator {
             }
 
             final int candidateIndex = index + dir;
-            if (Board.isValidIndex(candidateIndex)) {
-                final Piece candidatePiece = board.getPiece(candidateIndex);
-                if (isEmptyPiece(candidatePiece)) {
-                    moves.add(candidateIndex);
-                } else {
-                    if (areOpponents(king, candidatePiece)) {
-                        moves.add(candidateIndex);
-                    }
-                }
-            }
+            shouldAddKMove(board, king, moves, candidateIndex);
         }
 
         switch (king.getSide()) {

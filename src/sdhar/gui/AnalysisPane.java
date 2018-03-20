@@ -1,15 +1,21 @@
 package sdhar.gui;
 
 import javafx.scene.layout.Pane;
+import sdhar.chess.Board;
+import sdhar.chess.BoardBuilder;
 
 public class AnalysisPane extends Pane {
 
-    private final AnalysisBoard analysisBoard;
-    private final Menu menu;
+    private BoardRenderer boardRenderer;
+    private Board board = BoardBuilder.buildStandard();
 
     public AnalysisPane(final double width, final double height) {
-        analysisBoard = new AnalysisBoard(400);
-        menu = new Menu();
+        boardRenderer = new BoardRenderer(400, board.getSquares());
+        boardRenderer.setOnPieceMoved((squareFrom, squareTo) -> {
+            board = board.makeMove(squareFrom, squareTo).orElse(board);
+            boardRenderer.render(board.getSquares());
+        });
+        final Menu menu = new Menu();
 
         setWidth(width);
         setHeight(height);
@@ -26,18 +32,18 @@ public class AnalysisPane extends Pane {
         });
 
         menu.prefHeightProperty().bind(heightProperty());
-        getChildren().addAll(analysisBoard, menu);
+        getChildren().addAll(boardRenderer, menu);
     }
 
     private void centerAnalysisBoard() {
-        analysisBoard.setTranslateX(getWidth()/2 - analysisBoard.getWidth()/2);
-        analysisBoard.setTranslateY(getHeight()/2 - analysisBoard.getHeight()/2 - 20);
+        boardRenderer.setTranslateX(getWidth()/2 - boardRenderer.getWidth()/2);
+        boardRenderer.setTranslateY(getHeight()/2 - boardRenderer.getHeight()/2 - 20);
     }
 
     private void resizeAnalysisBoard() {
         if (getHeight() * 0.8 < getWidth() * 0.65) {
-            analysisBoard.setHeight(getHeight() * 0.8);
-            analysisBoard.setWidth(getHeight() * 0.8);
+            boardRenderer.setHeight(getHeight() * 0.8);
+            boardRenderer.setWidth(getHeight() * 0.8);
         }
     }
 

@@ -72,8 +72,6 @@ public class Menu extends Pane {
         });
 
         getChildren().addAll(itemsBox, openButton);
-        addItem("Test 1", null);
-        addItem("test 2", null);
     }
 
     void addItem(final String itemName, final EventHandler<ActionEvent> handler) {

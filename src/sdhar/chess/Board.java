@@ -60,17 +60,17 @@ public class Board {
     static boolean isSeventhRank(final int index) { return isValidIndex(index) && SEVENTH_RANK[index]; }
     static boolean isEighthRank(final int index) { return isValidIndex(index) && EIGHTH_RANK[index]; }
 
-    private final List<Piece> squares;
-    private final Side turnToMove;
-    private final int whiteKingIndex;
-    private final int blackKingIndex;
     private final CastleRights whiteCastleRight;
     private final CastleRights blackCastleRight;
     private final int enpassantIndex;
+    private final Side turnToMove;
+    private final Piece[] squares;
+    private final int whiteKingIndex;
+    private final int blackKingIndex;
     private final int promotionSquareIndex;
 
-    Board (
-            final Map<Integer, Piece> squares,
+    Board(
+            final Map<Integer, Piece> pieceMap,
             final Side turnToMove,
             final CastleRights whiteCastleRight,
             final CastleRights blackCastleRight,
@@ -81,39 +81,34 @@ public class Board {
         this.whiteCastleRight = whiteCastleRight;
         this.blackCastleRight = blackCastleRight;
         this.enpassantIndex = enpassantIndex;
+        this.squares = new Piece[64];
 
         int wKIndex = -1;
         int bKIndex = -1;
 
-        final List<Piece> tempSquares = new ArrayList<>();
         for (int i = 0; i < 64; i++) {
-            if (squares.containsKey(i)) {
-                final Piece piece = squares.get(i);
-                tempSquares.add(piece);
-
-                if (piece == Piece.WHITE_KING) {
-                    wKIndex = i;
-                } else if (piece == Piece.BLACK_KING) {
+            final Piece piece = pieceMap.getOrDefault(i, Piece.NONE);
+            squares[i] = piece;
+            switch (piece) {
+                case BLACK_KING:
                     bKIndex = i;
-                }
-            } else {
-                tempSquares.add(Piece.NONE);
+                    break;
+                case WHITE_KING:
+                    wKIndex = i;
+                    break;
             }
         }
-        if (wKIndex == -1 || bKIndex == -1) {
-            throw new IllegalArgumentException("The board must contain both kings!");
-        }
 
-        this.squares = Collections.unmodifiableList(tempSquares);
+        if (wKIndex == -1 || bKIndex == -1)
+            throw new IllegalArgumentException("The board must contain both kings!");
 
         whiteKingIndex = wKIndex;
         blackKingIndex = bKIndex;
-
         this.promotionSquareIndex = promotionSquareIndex;
     }
 
-    private Board (
-            final List<Piece> squares,
+    private Board(
+            final Piece[] pieces,
             final Side turnToMove,
             final CastleRights whiteCastleRight,
             final CastleRights blackCastleRight,
@@ -124,24 +119,27 @@ public class Board {
         this.whiteCastleRight = whiteCastleRight;
         this.blackCastleRight = blackCastleRight;
         this.enpassantIndex = enpassantIndex;
+        squares = new Piece[64];
 
         int wKIndex = -1;
         int bKIndex = -1;
 
         for (int i = 0; i < 64; i++) {
-            final Piece piece = squares.get(i);
-            if (piece == Piece.WHITE_KING) {
-                wKIndex = i;
-            } else if (piece == Piece.BLACK_KING) {
-                bKIndex = i;
+            final Piece piece = pieces[i];
+            squares[i] = piece;
+            switch (piece) {
+                case BLACK_KING:
+                    bKIndex = i;
+                    break;
+                case WHITE_KING:
+                    wKIndex = i;
+                    break;
             }
         }
 
         if (wKIndex == -1 || bKIndex == -1) {
             throw new IllegalArgumentException("The board must contain both kings!");
         }
-
-        this.squares = Collections.unmodifiableList(new ArrayList<>(squares));
 
         whiteKingIndex = wKIndex;
         blackKingIndex = bKIndex;
@@ -168,7 +166,7 @@ public class Board {
 
     public Piece getPiece(final int index) {
         if (index < 0 || index > 63) return Piece.NONE;
-        return squares.get(index);
+        return squares[index];
     }
 
     public Optional<Integer> getPromotionSquare() {
@@ -176,17 +174,14 @@ public class Board {
         return Optional.of(promotionSquareIndex);
     }
 
-    List<Piece> getSquares() { return new ArrayList<>(squares); }
+    public List<Piece> getCopyOfSquares() { return Arrays.asList(Arrays.copyOf(squares, squares.length)); }
 
-    /* Tasks:
-        + make the move
-        + check for enpassant
-        + set enpassant index
-        + check for promotion
-        + check for king castling
-        + set castle rights
-    */
-    public Optional<Board> makeMove(final int startingIndex, final int endingIndex) {
+    public List<Piece> getSquares() { return Collections.unmodifiableList(Arrays.asList(squares)); }
+
+    public Optional<Board> makeMove(final Square startingSquare, final Square endingSquare) {
+        final int startingIndex = startingSquare.index;
+        final int endingIndex = endingSquare.index;
+
         final Piece pieceMoving = getPiece(startingIndex);
 
         if (pieceMoving == Piece.NONE) return Optional.empty();
@@ -195,10 +190,10 @@ public class Board {
         final List<Integer> legalMoves = MoveGenerator.legalMoves(this, startingIndex);
         if (!legalMoves.contains(endingIndex)) return Optional.empty();
 
-        final List<Piece> newSquares = new ArrayList<>(squares);
+        final Piece[] newSquares = Arrays.copyOf(squares, 64);
 
-        newSquares.set(endingIndex, pieceMoving);
-        newSquares.set(startingIndex, Piece.NONE);
+        newSquares[endingIndex] = pieceMoving;
+        newSquares[startingIndex] = Piece.NONE;
 
         int newEnpassantIndex = -1;
         int newPromotionSquareIndex = -1;
@@ -208,7 +203,7 @@ public class Board {
             case WHITE_PAWN:
                 // check enpassant
                 if (endingIndex == enpassantIndex) {
-                    newSquares.set(endingIndex + 8, Piece.NONE);
+                    newSquares[endingIndex + 8] = Piece.NONE;
                 }
                 // set enpassant
                 else if (endingIndex == startingIndex - 16) {
@@ -222,7 +217,7 @@ public class Board {
             case BLACK_PAWN:
                 // check enpassant
                 if (endingIndex == enpassantIndex) {
-                    newSquares.set(endingIndex - 8, Piece.NONE);
+                    newSquares[endingIndex - 8] = Piece.NONE;
                 }
                 // set enpassant
                 else if (endingIndex == startingIndex + 16) {
@@ -237,11 +232,11 @@ public class Board {
             case BLACK_KING:
                 // check for castling
                 if (endingIndex == startingIndex + 2) {
-                    newSquares.set(endingIndex - 1, newSquares.get(endingIndex + 1));
-                    newSquares.set(endingIndex + 1, Piece.NONE);
+                    newSquares[endingIndex - 1] = newSquares[endingIndex + 1];
+                    newSquares[endingIndex + 1] = Piece.NONE;
                 } else if (endingIndex == startingIndex - 2) {
-                    newSquares.set(endingIndex + 1, newSquares.get(endingIndex - 2));
-                    newSquares.set(endingIndex - 2, Piece.NONE);
+                    newSquares[endingIndex + 1] = newSquares[endingIndex - 2];
+                    newSquares[endingIndex - 2] = Piece.NONE;
                 }
                 newCastleRights = CastleRights.NONE;
                 break;
@@ -257,22 +252,19 @@ public class Board {
 
         return Optional.of(
                 new Board(
-                    newSquares,
-                    turnToMove.flip(),
-                    turnToMove == Side.WHITE? newCastleRights: whiteCastleRight,
-                    turnToMove == Side.BLACK? newCastleRights: blackCastleRight,
-                    newEnpassantIndex,
-                    newPromotionSquareIndex
+                        newSquares,
+                        turnToMove.flip(),
+                        turnToMove == Side.WHITE? newCastleRights: whiteCastleRight,
+                        turnToMove == Side.BLACK? newCastleRights: blackCastleRight,
+                        newEnpassantIndex,
+                        newPromotionSquareIndex
                 )
         );
     }
 
     boolean equals(final Board other) {
         for (int i = 0; i < 64; i++) {
-            final Piece myPiece = squares.get(i);
-            final Piece otherBoardPiece = other.squares.get(i);
-
-            if (myPiece != otherBoardPiece) {
+            if (squares[i] != other.squares[i]) {
                 return false;
             }
         }
