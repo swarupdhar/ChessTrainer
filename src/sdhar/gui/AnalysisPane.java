@@ -10,12 +10,13 @@ public class AnalysisPane extends Pane {
     private Board board = BoardBuilder.buildStandard();
 
     public AnalysisPane(final double width, final double height) {
+        final Menu menu = new Menu();
+
         boardRenderer = new BoardRenderer(400, board.getSquares());
         boardRenderer.setOnPieceMoved((squareFrom, squareTo) -> {
             board = board.makeMove(squareFrom, squareTo).orElse(board);
             boardRenderer.render(board.getSquares());
         });
-        final Menu menu = new Menu();
 
         setWidth(width);
         setHeight(height);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class GameHistory {
 
@@ -60,11 +61,11 @@ public class GameHistory {
         return false;
     }
 
-    public boolean goForward(final Selector<GameNode> s) {
+    public boolean goForward(final Function<List<GameNode>, GameNode> func) {
         if (head.hasNextVariations()) {
             List<GameNode> nodes = new ArrayList<>(head.getNextVariations());
             nodes.add(head.getNextMainLine());
-            GameNode nodeToMoveTo = s.select(nodes);
+            GameNode nodeToMoveTo = func.apply(nodes);
             if (nodeToMoveTo != null) {
                 head = nodeToMoveTo;
                 return true;
