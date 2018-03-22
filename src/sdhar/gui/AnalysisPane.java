@@ -13,6 +13,7 @@ public class AnalysisPane extends Pane {
         final Menu menu = new Menu();
 
         boardRenderer = new BoardRenderer(400, board.getSquares());
+        boardRenderer.flipBoard();
         boardRenderer.setOnPieceMoved((squareFrom, squareTo) -> {
             board = board.makeMove(squareFrom, squareTo).orElse(board);
             boardRenderer.render(board.getSquares());
