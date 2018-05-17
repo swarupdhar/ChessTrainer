@@ -164,9 +164,13 @@ public class Board {
         return blackKingIndex;
     }
 
-    public Piece getPiece(final int index) {
+    Piece getPiece(final int index) {
         if (index < 0 || index > 63) return Piece.NONE;
         return squares[index];
+    }
+
+    public Piece getPiece(final Square square) {
+        return squares[square.index];
     }
 
     public Optional<Integer> getPromotionSquare() {
@@ -174,7 +178,11 @@ public class Board {
         return Optional.of(promotionSquareIndex);
     }
 
-    public List<Piece> getCopyOfSquares() { return Arrays.asList(Arrays.copyOf(squares, squares.length)); }
+    public List<Piece> getCopyOfSquares() {
+        Piece[] copy = new Piece[64];
+        System.arraycopy(squares, 0, copy, 0, squares.length);
+        return Arrays.asList(copy);
+    }
 
     public List<Piece> getSquares() { return Collections.unmodifiableList(Arrays.asList(squares)); }
 

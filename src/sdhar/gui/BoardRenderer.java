@@ -287,7 +287,7 @@ public class BoardRenderer extends Canvas {
                 return Square.H3;
 
             case 48:
-                return Square.A3;
+                return Square.A2;
             case 49:
                 return Square.B2;
             case 50:

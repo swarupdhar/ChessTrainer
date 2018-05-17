@@ -246,13 +246,18 @@ class MoveGenerator {
         return moves;
     }
 
-    private static boolean shouldAddSlidingMove(Board board, Piece bishop, List<Integer> moves, int candidateIndex) {
+    private static boolean shouldAddSlidingMove (
+            Board board,
+            Piece piece,
+            List<Integer> moves,
+            int candidateIndex
+    ) {
         if (Board.isValidIndex(candidateIndex)) {
             final Piece candidatePiece = board.getPiece(candidateIndex);
             if (isEmptyPiece(candidatePiece)) {
                 moves.add(candidateIndex);
             } else {
-                if (areOpponents(bishop, candidatePiece)) moves.add(candidateIndex);
+                if (areOpponents(piece, candidatePiece)) moves.add(candidateIndex);
                 return true;
             }
         } else {

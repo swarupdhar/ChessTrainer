@@ -1,8 +1,6 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sdhar.chess.Board;
-import sdhar.chess.BoardBuilder;
 import sdhar.gui.AnalysisPane;
 
 public class Main extends Application{
