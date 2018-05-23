@@ -11,7 +11,7 @@ import javafx.util.Duration;
 import res.Res;
 
 public class Menu extends Pane {
-    private static final int WIDTH = 200;
+    private static final int WIDTH = 280;
     private static final int TIME = 300;
 
     private final VBox itemsBox;
@@ -76,18 +76,17 @@ public class Menu extends Pane {
 
     void addItem(final String itemName, final EventHandler<ActionEvent> handler) {
         final Button menuItemButton = new Button(itemName);
-        menuItemButton.setPrefWidth(150);
         menuItemButton.setFont(Styles.MENU_FONT);
         menuItemButton.setStyle(Styles.MENU_ITEM_STYLE);
         menuItemButton.setOnAction(handler);
 
         final int numItems = itemsBox.getChildren().size();
         if (numItems == 0) {
-            menuItemButton.setTranslateX(WIDTH/2 - menuItemButton.getPrefWidth()/2);
+            menuItemButton.setTranslateX(25);
             menuItemButton.setTranslateY(230);
         } else {
             final Button lastButton = (Button) itemsBox.getChildren().get(numItems - 1);
-            menuItemButton.setTranslateX(WIDTH/2 - menuItemButton.getPrefWidth()/2);
+            menuItemButton.setTranslateX(25);
             menuItemButton.setTranslateY(lastButton.getTranslateY() + 22);
         }
         itemsBox.getChildren().add(menuItemButton);
