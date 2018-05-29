@@ -154,7 +154,12 @@ public class Board {
         return Optional.of(enpassantIndex);
     }
 
-    CastleRights getCastleRight(final Side side) {
+    public Square getEnpassantSquare() {
+        if (enpassantIndex == -1) return Square.NONE;
+        return Square.fromIndex(enpassantIndex);
+    }
+
+    public CastleRights getCastleRight(final Side side) {
         if (side == Side.WHITE) return whiteCastleRight;
         return blackCastleRight;
     }

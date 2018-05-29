@@ -1,6 +1,7 @@
 package sdhar.engine;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class Engine implements AutoCloseable {
@@ -81,6 +82,8 @@ public class Engine implements AutoCloseable {
                     int currentDepth = 0;
                     int score = 0;
                     String bestMove = null;
+                    String currMove = null;
+                    StringBuilder pv = new StringBuilder();
 
                     for (int i = 0; i < parts.length; i++) {
                         final String item = parts[i];
@@ -89,19 +92,32 @@ public class Engine implements AutoCloseable {
                                 currentDepth = Integer.parseInt(parts[i+1]);
                                 break;
                             case "score":
-                                score = Integer.parseInt(parts[i+1]);
+                                score = Integer.parseInt(parts[i+2]);
                                 break;
                             case "bestmove":
                                 bestMove = parts[i+1];
+                                break;
+                            case "currmove":
+                                currMove = parts[i+1];
+                                break;
+                            case "pv":
+                                for (int n = i+1; n < parts.length; n++) {
+                                    pv.append(parts[n]).append(" ");
+                                }
                                 break;
                         }
                     }
 
                     EvaluationOutput out = new EvaluationOutput(currentDepth, score);
                     out.setBestMove(bestMove);
+                    out.setCurrMove(currMove);
+                    out.setPv(pv.toString());
                     func.accept(out);
 
-                    if (tag.toLowerCase().equals("bestmove")) break;
+                    if (tag.toLowerCase().equals("bestmove")) {
+                        break;
+                    }
+
                 }
             } catch (IOException ignored) {
                 ignored.printStackTrace();
@@ -116,7 +132,7 @@ public class Engine implements AutoCloseable {
                     "to engine.\n" +
                     "The outputstream is null.");
 
-        outputStream.write((fen + "\n").getBytes());
+        outputStream.write(String.format("position fen %s\n", fen).getBytes());
         outputStream.flush();
     }
 

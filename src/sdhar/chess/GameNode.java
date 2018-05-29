@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-class GameNode {
+public class GameNode {
 
     private final Board board;
     private float moveNumber;
@@ -14,7 +14,7 @@ class GameNode {
     private GameNode nextMainLine;
     private List<GameNode> nextVariations = new ArrayList<>();
 
-    GameNode(final Board board) {
+    public GameNode(final Board board) {
         this.board = board;
         moveNumber = 0;
         parentNode = null;
@@ -33,9 +33,9 @@ class GameNode {
     boolean hasNextMainLine() { return nextMainLine != null; }
 
     boolean hasNextVariations() { return nextVariations.size() > 0; }
-    List<GameNode> getNextVariations() { return Collections.unmodifiableList(nextVariations); }
+    public List<GameNode> getNextVariations() { return Collections.unmodifiableList(nextVariations); }
 
-    GameNode addNext(final GameNode node) {
+    public GameNode addNext(final GameNode node) {
         if (hasNextMainLine()) {
             for (final GameNode n: nextVariations) {
                 if (n.board.equals(node.board)) {

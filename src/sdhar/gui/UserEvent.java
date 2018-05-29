@@ -1,0 +1,10 @@
+package sdhar.gui;
+
+public enum UserEvent {
+    START_TRAINING_EVENT,
+    START_ANALYSIS_MODE_EVENT,
+    PLAY_COMPUTER_EVENT,
+    SHOW_SETTINGS_EVENT,
+    SHOW_ABOUT_EVENT,
+    SHOW_REPORTS_EVENT;
+}
