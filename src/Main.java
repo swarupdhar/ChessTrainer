@@ -3,19 +3,38 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sdhar.gui.AnalysisPane;
 import sdhar.gui.PlayComputerPane;
+import sdhar.gui.TrainingPane;
+import sdhar.io.NativeUtils;
+
+import java.io.IOException;
 
 public class Main extends Application {
 
     public static void main(String[] args) {
+//        try {
+//            NativeUtils.loadLibraryFromJar("/jni/libtensorflow_framework.so");
+//            NativeUtils.loadLibraryFromJar("/jni/libtensorflow_jni.dylib");
+            System.load("/Users/student/Projects/ChessTrainer/out/production/ChessTrainer/libs/jni/libtensorflow_framework.so");
+            System.load("/Users/student/Projects/ChessTrainer/out/production/ChessTrainer/libs/jni/libtensorflow_jni.dylib");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        final AnalysisPane analysisPane = new AnalysisPane(800, 600, event -> {
+
+        final AnalysisPane analysisPane = new AnalysisPane(800, 600, (event, caller) -> {
             switch (event) {
                 case START_TRAINING_EVENT:
-                    // TODO: do training stuff
+                    TrainingPane trainingPane = new TrainingPane(800, 600, (evt, c) -> {
+
+                    });
+                    trainingPane.prefWidthProperty().bind(primaryStage.widthProperty());
+                    trainingPane.prefHeightProperty().bind(primaryStage.heightProperty());
+                    Scene tScene = new Scene(trainingPane);
+                    primaryStage.setScene(tScene);
                     break;
                 case PLAY_COMPUTER_EVENT:
                     // TODO: get the user to pick strength and color/random
@@ -24,7 +43,6 @@ public class Main extends Application {
                     playComputerPane.prefHeightProperty().bind(primaryStage.heightProperty());
                     Scene scene = new Scene(playComputerPane);
                     primaryStage.setScene(scene);
-                    primaryStage.show();
                     break;
                 case SHOW_REPORTS_EVENT:
                     break;

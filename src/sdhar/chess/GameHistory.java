@@ -8,10 +8,12 @@ import java.util.function.Function;
 
 public class GameHistory {
 
+    private final GameNode root;
     private GameNode head;
 
-    public GameHistory(final Board root) {
-        head = new GameNode(root);
+    public GameHistory(final Board rootBoard) {
+        this.root = new GameNode(rootBoard);
+        head = this.root;
     }
 
     public void addNext(final Board board) {
@@ -35,22 +37,22 @@ public class GameHistory {
         return Optional.empty();
     }
 
-    public Optional<List<Board>> getNextVariations() {
+    public List<Board> getNextLines() {
         if (head.hasNextMainLine()) {
             final List<Board> boards = new ArrayList<>();
             if (head.getNextMainLine().hasBoard()) {
                 boards.add(head.getNextMainLine().getBoard());
             }
             if (head.hasNextVariations()) {
-                for (GameNode node: head.getNextVariations()) {
+                for (final GameNode node: head.getNextVariations()) {
                     if (node.hasBoard()) {
                         boards.add(node.getBoard());
                     }
                 }
             }
-            return Optional.of(Collections.unmodifiableList(boards));
+            return Collections.unmodifiableList(boards);
         }
-        return Optional.empty();
+        return new ArrayList<>();
     }
 
     public boolean goBack() {
@@ -77,6 +79,19 @@ public class GameHistory {
             return true;
         }
         return false;
+    }
+
+    public List<Board> getMainLine() {
+        final List<Board> result = new ArrayList<>();
+
+        GameNode current = this.root;
+
+        while (current.hasNextMainLine()) {
+            result.add(current.getBoard());
+            current = current.getNextMainLine();
+        }
+
+        return Collections.unmodifiableList(result);
     }
 
 }

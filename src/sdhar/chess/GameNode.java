@@ -3,7 +3,6 @@ package sdhar.chess;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public class GameNode {
 
@@ -14,7 +13,7 @@ public class GameNode {
     private GameNode nextMainLine;
     private List<GameNode> nextVariations = new ArrayList<>();
 
-    public GameNode(final Board board) {
+    GameNode(final Board board) {
         this.board = board;
         moveNumber = 0;
         parentNode = null;
